@@ -167,20 +167,25 @@ class Game():
         else:
             self.tabuleiro.posicionar(row, col, "O")
 
+    def askInput(self):
+        row = int(input(f"Jogador {self.currentPlayer}, digite a LINHA:"))
+        col = int(input(f"Jogador {self.currentPlayer}, digite a COLUNA:"))
+        return [row, col]
+
 
     def startGameLoop(self):
+        while self.gameEnded == False:
+            jogada = self.askInput()
+            self.placePiece(jogada[0], jogada[1], self.currentPlayer)
+            self.tabuleiro.print_tabuleiro()
+            ganhador = self.tabuleiro.verificarGanhador()
+            if ganhador == 0:
+                return "Jogador 0 ganhou!"
+            elif ganhador == 1:
+                return "Jogador 1 ganhou!"
+            #self.switchPlayer()
 
 
 gomoku = Gomoku()
-gomoku.posicionar(3,4, "X")
-gomoku.posicionar(3,5, "O")
-gomoku.posicionar(3,6, "O")
-gomoku.posicionar(3,7, "X")
-gomoku.posicionar(14,8, "X")
-gomoku.posicionar(13,7, "X")
-gomoku.posicionar(12,6, "X")
-gomoku.posicionar(11,5, "X")
-gomoku.posicionar(10,4, "X")
-gomoku.posicionar(3,13, "X")
-gomoku.print_tabuleiro()
-print(gomoku.verificarGanhador())
+game = Game(gomoku)
+print(game.startGameLoop())
