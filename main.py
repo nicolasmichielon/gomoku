@@ -1,3 +1,6 @@
+import random
+
+
 class Gomoku():
     def __init__(self, tamanho=19):
         self.tamanho = tamanho
@@ -173,19 +176,51 @@ class Game():
         return [row, col]
 
 
-    def startGameLoop(self):
-        while self.gameEnded == False:
+    def startPlayerGameLoop(self):
+        while not self.gameEnded:
             jogada = self.askInput()
             self.placePiece(jogada[0], jogada[1], self.currentPlayer)
             self.tabuleiro.print_tabuleiro()
             ganhador = self.tabuleiro.verificarGanhador()
             if ganhador == 0:
+                self.gameEnded = True
                 return "Jogador 0 ganhou!"
             elif ganhador == 1:
+                self.gameEnded = True
                 return "Jogador 1 ganhou!"
-            #self.switchPlayer()
+            self.switchPlayer()
+
+    def generateInput(self):
+        row = random.randint(0, 19)
+        col = random.randint(0, 19)
+        return [row, col]
+
+    def startBotGameLoop(self):
+        while not self.gameEnded:
+            if self.currentPlayer == 0:
+                jogada = self.askInput()
+            else:
+                jogada = self.generateInput()
+            self.placePiece(jogada[0], jogada[1], self.currentPlayer)
+            print("\n\n\n\n\n\n\n")
+            self.tabuleiro.print_tabuleiro()
+            ganhador = self.tabuleiro.verificarGanhador()
+            if ganhador == 0:
+                self.gameEnded = True
+                return "Jogador 0 ganhou!"
+            elif ganhador == 1:
+                self.gameEnded = True
+                return "Bot ganhou!"
+            self.switchPlayer()
+
+    def start(self):
+        modo = int(input("Escolha seu modo de jogo:\n1 - Player 0 vs Player 1\n2 - Player vs Bot\n"))
+        if modo == 1:
+            self.startPlayerGameLoop()
+        elif modo == 2:
+            self.startBotGameLoop()
 
 
 gomoku = Gomoku()
 game = Game(gomoku)
-print(game.startGameLoop())
+print(game.start())
