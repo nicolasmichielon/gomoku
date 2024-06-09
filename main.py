@@ -173,6 +173,10 @@ class Game():
     def askInput(self):
         row = int(input(f"Jogador {self.currentPlayer}, digite a LINHA:"))
         col = int(input(f"Jogador {self.currentPlayer}, digite a COLUNA:"))
+        while self.tabuleiro.tabuleiro[row-1][col-1] == self.players[self.currentPlayer]:
+            print("Jogada inválida, tente novamente!")
+            row = int(input(f"Jogador {self.currentPlayer}, digite a LINHA:"))
+            col = int(input(f"Jogador {self.currentPlayer}, digite a COLUNA:"))
         return [row, col]
 
 
@@ -193,6 +197,9 @@ class Game():
     def generateInput(self):
         row = random.randint(0, 19)
         col = random.randint(0, 19)
+        while self.tabuleiro.tabuleiro[row-1][col-1] == self.players[self.currentPlayer]:
+            row = random.randint(0, 19)
+            col = random.randint(0, 19)
         return [row, col]
 
     def startBotGameLoop(self):
@@ -201,8 +208,8 @@ class Game():
                 jogada = self.askInput()
             else:
                 jogada = self.generateInput()
+                print(f"BOT jogou {jogada[0]}, {jogada[1]}")
             self.placePiece(jogada[0], jogada[1], self.currentPlayer)
-            print("\n\n\n\n\n\n\n")
             self.tabuleiro.print_tabuleiro()
             ganhador = self.tabuleiro.verificarGanhador()
             if ganhador == 0:
@@ -216,9 +223,9 @@ class Game():
     def start(self):
         modo = int(input("Escolha seu modo de jogo:\n1 - Player 0 vs Player 1\n2 - Player vs Bot\n"))
         if modo == 1:
-            self.startPlayerGameLoop()
+            return self.startPlayerGameLoop()
         elif modo == 2:
-            self.startBotGameLoop()
+            return self.startBotGameLoop()
 
 
 gomoku = Gomoku()
