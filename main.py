@@ -146,7 +146,17 @@ class Gomoku():
                 c -= 1
                 r += 1
             aux += 1
-        return "Continua"
+
+        r = 0
+        c = 0
+        #Draw Check
+        while r < len(self.tabuleiro):
+            while c < len(self.tabuleiro):
+                if self.tabuleiro[r][c] == "-":
+                    return
+                c += 1
+            r += 1
+        return "draw"
 
         
                 
@@ -173,7 +183,7 @@ class Game():
     def askInput(self):
         row = int(input(f"Jogador {self.currentPlayer}, digite a LINHA:"))
         col = int(input(f"Jogador {self.currentPlayer}, digite a COLUNA:"))
-        while self.tabuleiro.tabuleiro[row-1][col-1] == self.players[self.currentPlayer]:
+        while self.tabuleiro.tabuleiro[row-1][col-1] == self.players[1] or self.tabuleiro.tabuleiro[row-1][col-1] == self.players[0]:
             print("Jogada inválida, tente novamente!")
             row = int(input(f"Jogador {self.currentPlayer}, digite a LINHA:"))
             col = int(input(f"Jogador {self.currentPlayer}, digite a COLUNA:"))
@@ -192,6 +202,9 @@ class Game():
             elif ganhador == 1:
                 self.gameEnded = True
                 return "Jogador 1 ganhou!"
+            elif ganhador == "draw":
+                self.gameEnded = True
+                return "Empate!"
             self.switchPlayer()
 
     def generateInput(self):
@@ -218,6 +231,9 @@ class Game():
             elif ganhador == 1:
                 self.gameEnded = True
                 return "Bot ganhou!"
+            elif ganhador == "draw":
+                self.gameEnded = True
+                return "Empate!"
             self.switchPlayer()
 
     def start(self):
