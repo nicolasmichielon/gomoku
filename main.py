@@ -1,4 +1,4 @@
-import random
+from random import randint
 
 class Player():
     def __init__(self, simbolo):
@@ -20,11 +20,11 @@ class Bot(Player):
     
 
     def generateInput(self, game):
-        row = random.randint(0, 19)
-        col = random.randint(0, 19)
+        row = randint(0, 19)
+        col = randint(0, 19)
         while game.tabuleiro.matriz[row-1][col-1] == game.players[game.currentPlayer]:
-            row = random.randint(0, 19)
-            col = random.randint(0, 19)
+            row = randint(0, 19)
+            col = randint(0, 19)
         return [row, col]
 
 
