@@ -1,5 +1,32 @@
 import random
 
+class Player():
+    def __init__(self, simbolo):
+        self.simbolo = simbolo
+    
+
+    def placePiece(self, tabuleiro, row, col):
+        tabuleiro.posicionar(row, col, self.simbolo)
+        return
+
+
+class Bot(Player):
+    def __init__(self, simbolo):
+        super().__init__(simbolo)
+
+
+    def placePiece(self, tabuleiro, row, col):
+        return super().placePiece(tabuleiro, row, col)
+    
+
+    def generateInput(self, game):
+        row = random.randint(0, 19)
+        col = random.randint(0, 19)
+        while game.tabuleiro.tabuleiro[row-1][col-1] == game.players[game.currentPlayer]:
+            row = random.randint(0, 19)
+            col = random.randint(0, 19)
+        return [row, col]
+
 
 class Gomoku():
     def __init__(self, tamanho=19):
@@ -12,11 +39,13 @@ class Gomoku():
             self.tabuleiro.append(row)
             row = []
 
+
     def print_tabuleiro(self):
       for row in self.tabuleiro:
         for i in row:
           print(" " + i, end="")
         print()
+
 
     def posicionar(self, row, col, x):
       row -= 1
@@ -26,6 +55,7 @@ class Gomoku():
         return True
       return False
     
+
     def verificarGanhador(self):
         #Horizontal check
         for row in self.tabuleiro:
@@ -33,8 +63,10 @@ class Gomoku():
             p1 = 0
             for i in row:
                 if i == "X":
+                    p1 = 0
                     p0 += 1
                 if i == "O":
+                    p0 = 0
                     p1 += 1
             if p0 == 5:
                 return 0
@@ -72,8 +104,10 @@ class Gomoku():
             while c < len(self.tabuleiro):
                 if self.tabuleiro[r][c] == "X":
                     p0 += 1
+                    p1 = 0
                 elif self.tabuleiro[r][c] == "O":
                     p1 += 1
+                    p0 = 0
                 else:
                     p0 = 0
                     p1 = 0
@@ -91,8 +125,10 @@ class Gomoku():
             c = 0
             while r < len(self.tabuleiro):
                 if self.tabuleiro[r][c] == "X":
+                    p1 = 0
                     p0 += 1
                 elif self.tabuleiro[r][c] == "O":
+                    p0 = 0
                     p1 += 1
                 else:
                     p0 = 0
@@ -112,8 +148,10 @@ class Gomoku():
             r = 0
             while r < len(self.tabuleiro):
                 if self.tabuleiro[r][c] == "X":
+                    p1 = 0
                     p0 += 1
                 elif self.tabuleiro[r][c] == "O":
+                    p0 = 0
                     p1 += 1
                 else:
                     p0 = 0
@@ -133,8 +171,10 @@ class Gomoku():
             c = 4
             while r < len(self.tabuleiro):
                 if self.tabuleiro[r][c] == "X":
+                    p1 = 0
                     p0 += 1
                 elif self.tabuleiro[r][c] == "O":
+                    p0 = 0
                     p1 += 1
                 else:
                     p0 = 0
@@ -162,11 +202,13 @@ class Gomoku():
                 
     
 class Game():
-    def __init__(self, tabuleiro):
+    def __init__(self, tabuleiro, players, bot):
         self.tabuleiro = tabuleiro
-        self.players = ["X", "O"]
+        self.players = players
+        self.bot = bot
         self.currentPlayer = 0
         self.gameEnded= False
+
 
     def switchPlayer(self):
         if self.currentPlayer == 0:
@@ -174,11 +216,6 @@ class Game():
         else:
             self.currentPlayer = 0
 
-    def placePiece(self, row, col, player):
-        if player == 0:
-            self.tabuleiro.posicionar(row, col, "X")
-        else:
-            self.tabuleiro.posicionar(row, col, "O")
 
     def askInput(self):
         row = int(input(f"Jogador {self.currentPlayer}, digite a LINHA:"))
@@ -193,7 +230,7 @@ class Game():
     def startPlayerGameLoop(self):
         while not self.gameEnded:
             jogada = self.askInput()
-            self.placePiece(jogada[0], jogada[1], self.currentPlayer)
+            self.players[self.currentPlayer].placePiece(self.tabuleiro, jogada[0], jogada[1])
             self.tabuleiro.print_tabuleiro()
             ganhador = self.tabuleiro.verificarGanhador()
             if ganhador == 0:
@@ -207,22 +244,16 @@ class Game():
                 return "Empate!"
             self.switchPlayer()
 
-    def generateInput(self):
-        row = random.randint(0, 19)
-        col = random.randint(0, 19)
-        while self.tabuleiro.tabuleiro[row-1][col-1] == self.players[self.currentPlayer]:
-            row = random.randint(0, 19)
-            col = random.randint(0, 19)
-        return [row, col]
 
     def startBotGameLoop(self):
         while not self.gameEnded:
             if self.currentPlayer == 0:
                 jogada = self.askInput()
+                self.players[self.currentPlayer].placePiece(self.tabuleiro, jogada[0], jogada[1])
             else:
-                jogada = self.generateInput()
+                jogada = self.bot.generateInput(self)
+                self.bot.placePiece(self.tabuleiro, jogada[0], jogada[1])
                 print(f"BOT jogou {jogada[0]}, {jogada[1]}")
-            self.placePiece(jogada[0], jogada[1], self.currentPlayer)
             self.tabuleiro.print_tabuleiro()
             ganhador = self.tabuleiro.verificarGanhador()
             if ganhador == 0:
@@ -236,14 +267,19 @@ class Game():
                 return "Empate!"
             self.switchPlayer()
 
+
     def start(self):
         modo = int(input("Escolha seu modo de jogo:\n1 - Player 0 vs Player 1\n2 - Player vs Bot\n"))
         if modo == 1:
             return self.startPlayerGameLoop()
         elif modo == 2:
+            self.players[1] = self.bot
             return self.startBotGameLoop()
 
 
 gomoku = Gomoku()
-game = Game(gomoku)
+player1 = Player("X")
+player2 = Player("O")
+bot = Bot("O")
+game = Game(gomoku, [player1, player2], bot)
 print(game.start())
