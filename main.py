@@ -87,13 +87,32 @@ class Game():
 
 
     def askInput(self):
-        row = int(input(f"Jogador {self.currentPlayer}, digite a LINHA:"))
-        col = int(input(f"Jogador {self.currentPlayer}, digite a COLUNA:"))
-        while self.tabuleiro.matriz[row-1][col-1] == self.players[1].simbolo or self.tabuleiro.matriz[row-1][col-1] == self.players[0].simbolo:
+        while True:
+            input_player = input(f"Jogador {self.currentPlayer}, digite sua jogada no formato A1:")
+
+            if len(input_player) >= 2 and len(input_player) <= 3:
+                col = input_player[0]
+                if 'A' <= col <= 'S' or 'a' <= col <= 's':
+                    if 'a' <= col <= 's':
+                        col = chr(ord(col) - 32)
+                    
+                    row_part = input_player[1:]
+                    row_valid = True
+                    row = 0
+
+                    for char in row_part:
+                        if '0' <= char <= '9':
+                            row = row * 10 + (ord(char) - ord('0'))
+                        else:
+                            row_valid = False
+                            break
+
+                    if row_valid and 1 <= row <= 19:
+                        col_num = ord(col) - 64
+                        if self.tabuleiro.matriz[row-1][col_num-1] != self.players[1].simbolo and self.tabuleiro.matriz[row-1][col_num-1] != self.players[0].simbolo:
+                            return [row, col_num]
+
             print("Jogada inválida, tente novamente!")
-            row = int(input(f"Jogador {self.currentPlayer}, digite a LINHA:"))
-            col = int(input(f"Jogador {self.currentPlayer}, digite a COLUNA:"))
-        return [row, col]
 
 
     def startPlayerGameLoop(self):
@@ -202,6 +221,8 @@ class Game():
                 r += 1
             aux += 1
         #Diagonal Check Down
+        p0 = 0
+        p1 = 0
         aux = 1
         while aux < len(self.tabuleiro.matriz):
             r = aux
@@ -225,6 +246,8 @@ class Game():
             aux += 1
 
         #Diagonal Check Up Invert
+        p0 = 0
+        p1 = 0
         aux = len(self.tabuleiro.matriz) - 1
         while aux >= 0:
             c = aux
@@ -248,6 +271,8 @@ class Game():
             aux -= 1
 
         #Diagonal Check Down Invert
+        p0 = 0
+        p1 = 0
         aux = 1
         while aux < len(self.tabuleiro.matriz):
             r = aux
