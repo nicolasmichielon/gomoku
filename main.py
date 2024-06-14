@@ -41,9 +41,23 @@ class Tabuleiro():
 
 
     def print_tabuleiro(self):
-      for row in self.matriz:
-        for i in row:
-          print(" " + i, end="")
+        letra = 65
+        num = 1
+        print()
+        print("     ",end="")
+        for i in range(self.tamanho):
+            print(chr(letra), end="  ")
+            letra += 1
+        print()
+        for row in self.matriz:
+            if num <= 9:
+                print(f" {num}", end=" ")
+            else:
+                print(f"{num}", end=" ")
+            for i in row:
+                print(f"  {i}", end="")
+            num += 1
+            print()
         print()
 
 
