@@ -4,9 +4,9 @@ class Player():
     def __init__(self, simbolo):
         self.simbolo = simbolo
     
-
+    # Player posiciona a peça no tabuleiro
     def placePiece(self, tabuleiro, row, col):
-        tabuleiro.posicionar(row, col, self.simbolo)
+        tabuleiro.position(row, col, self.simbolo)
         return
 
 
@@ -14,11 +14,11 @@ class Bot(Player):
     def __init__(self, simbolo):
         super().__init__(simbolo)
 
-
+    # Bot posiciona a peça no tabuleiro
     def placePiece(self, tabuleiro, row, col):
         return super().placePiece(tabuleiro, row, col)
     
-
+    # Gera uma posição aleartória para o bot fazer a jogada
     def generateInput(self, game):
         row = randint(0, 19)
         col = randint(0, 19)
@@ -33,13 +33,14 @@ class Tabuleiro():
         self.tamanho = tamanho
         self.matriz = []
         row = []
+        #Inicializa tabuleiro
         for i in range(self.tamanho):
             for j in range(self.tamanho):
                 row.append("-")
             self.matriz.append(row)
             row = []
 
-
+    # Mostra o tabuleiro 
     def print_tabuleiro(self):
         letra = 65
         num = 1
@@ -60,8 +61,8 @@ class Tabuleiro():
             print()
         print()
 
-
-    def posicionar(self, row, col, x):
+    # Posiciona uma peça nop tabuleiro substituindo o espaço vazio pela peça informada
+    def position(self, row, col, x):
       row -= 1
       col -= 1
       if self.matriz[row][col] == "-":
@@ -78,14 +79,14 @@ class Game():
         self.currentPlayer = 0
         self.gameEnded= False
 
-
+    # Troca o turno
     def switchPlayer(self):
         if self.currentPlayer == 0:
             self.currentPlayer = 1
         else:
             self.currentPlayer = 0
 
-
+    # Solicita o input ao jogador e verifica se o input é válido
     def askInput(self):
         while True:
             input_player = input(f"Jogador {self.currentPlayer}, digite sua jogada no formato A1:")
@@ -114,7 +115,7 @@ class Game():
 
             print("Jogada inválida, tente novamente!")
 
-
+    # Começa o jogo no modo Player vs Player
     def startPlayerGameLoop(self):
         while not self.gameEnded:
             jogada = self.askInput()
@@ -132,7 +133,7 @@ class Game():
                 return "Empate!"
             self.switchPlayer()
 
-
+    # Começa o jogo no modo Player vs Bot
     def startBotGameLoop(self):
         while not self.gameEnded:
             if self.currentPlayer == 0:
@@ -155,7 +156,7 @@ class Game():
                 return "Empate!"
             self.switchPlayer()
 
-    
+    # Verifica se há ganhador
     def verificarGanhador(self):
         p0_simbolo = self.players[0].simbolo
         p1_simbolo = self.players[1].simbolo
@@ -306,7 +307,7 @@ class Game():
             r += 1
         return "draw"
 
-
+    # Incia o jogo e pergunta o modo desejado
     def start(self):
         modo = int(input("Escolha seu modo de jogo:\n1 - Player 0 vs Player 1\n2 - Player vs Bot\n"))
         if modo == 1:
@@ -315,7 +316,7 @@ class Game():
             self.players[1] = self.bot
             return self.startBotGameLoop()
 
-
+# Instancia os objetos e incia o jogo
 gomoku = Tabuleiro()
 player1 = Player("X")
 player2 = Player("O")
