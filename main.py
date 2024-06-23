@@ -92,11 +92,13 @@ class Game():
             input_player = input(f"Jogador {self.currentPlayer}, digite sua jogada no formato A1:")
 
             if len(input_player) >= 2 and len(input_player) <= 3:
+                # Verifica se o primeiro digito (que representa a coluna) é válido
                 col = input_player[0]
                 if 'A' <= col <= 'S' or 'a' <= col <= 's':
                     if 'a' <= col <= 's':
                         col = chr(ord(col) - 32)
-                    
+
+                    # Verifica se os demais digitos (que representam a linha) são válidos
                     row_part = input_player[1:]
                     row_valid = True
                     row = 0
@@ -160,7 +162,7 @@ class Game():
     def verificarGanhador(self):
         p0_simbolo = self.players[0].simbolo
         p1_simbolo = self.players[1].simbolo
-        #Horizontal check
+        # Verifica horizontal
         for row in self.tabuleiro.matriz:
             p0 = 0
             p1 = 0
@@ -175,7 +177,7 @@ class Game():
                 return 0
             elif p1 == 5:
                 return 1
-        #Vertical Check
+        # Verifica vertical
         c = 0
         p0 = 0
         p1 = 0
@@ -197,7 +199,7 @@ class Game():
                     p1 = 0
                 r += 1
             c += 1
-        #Diagonal Check Up
+        # Verifica diagonal 1
         p0 = 0
         p1 = 0
         aux = 0
@@ -221,7 +223,7 @@ class Game():
                 c += 1
                 r += 1
             aux += 1
-        #Diagonal Check Down
+        # Veririfica diagonal 2
         p0 = 0
         p1 = 0
         aux = 1
@@ -246,7 +248,7 @@ class Game():
                 r += 1
             aux += 1
 
-        #Diagonal Check Up Invert
+        # Verifica diagonal 3
         p0 = 0
         p1 = 0
         aux = len(self.tabuleiro.matriz) - 1
@@ -271,7 +273,7 @@ class Game():
                 r += 1
             aux -= 1
 
-        #Diagonal Check Down Invert
+        # Verifica diagonal 4
         p0 = 0
         p1 = 0
         aux = 1
@@ -298,7 +300,7 @@ class Game():
 
         r = 0
         c = 0
-        #Draw Check
+        # Verifica Empate
         while r < len(self.tabuleiro.matriz):
             while c < len(self.tabuleiro.matriz):
                 if self.tabuleiro.matriz[r][c] == "-":
